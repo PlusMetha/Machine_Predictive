@@ -3,45 +3,89 @@
 
 <body>
 
-  <h1>My First Heading</h1>
-  <p>My first paragraph.2</p>
-  <div style="height: 500px; width: 800px;">
-    <canvas id="myChart"></canvas>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <h1>My First Heading</h1>
+    <p>My first paragraph</p>
+    <div style="height: 500px; width: 800px;">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <hr>
+    <input id="pushvalue" value="10" type="number">
+    <input id="pushlable"  type="number">
+    <button id="push"> Push Value</button>
+
+
+    <script>
+        //https://blynk.cloud/external/api/get?token=rcTY2MUJRcmfnG0s36Q6fnl2qTE6ZHUD&v5
+        fetch("https://blynk.cloud/external/api/get?token=rcTY2MUJRcmfnG0s36Q6fnl2qTE6ZHUD&v5")
+            .then(function (response) {
+                return response.json() // แปลงข้อมูลที่ได้เป็น json
+            })
+            .then(function (data) {
+                console.log(data); // แสดงข้อมูล JSON จาก then ข้างบน
+            })
+        
+    
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const labels = [
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
  
-  <script>
-    const labels = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-    ];
+        ];
 
-    const data = {
-      labels: labels,
-      datasets: [{
-        label: 'My First dataset',
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: [0, 10, 5, 2, 20, 30, 45],
-      }]
-    };
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'My First dataset',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [1, 2, 3, 4, 5, 6, 7, 8, 9,],
+                spanGaps: true, //ทำให้ค่าที่หายไปแสดง
+                showLine: true, //ทำให้ค่าที่หายไปแสดง
+            }]
+        };
 
-    const config = {
-      type: 'line',
-      data: data,
-      options: {}
-    };
-  </script>
-  <script>
-    const myChart = new Chart(
-      document.getElementById('myChart'),
-      config
-    );
-  </script>
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+
+
+        const push  = document.getElementById('push');
+        push.addEventListener("click", pushValueChart)
+        // console.log(pushValue.value);
+        
+        function pushValueChart(){
+            //console.log(myChart.data.datasets[0].data); ตัวอย่างแสดงค่า
+            //myChart.data.datasets[0].data.push(5); ตัวอย่างเพิ่มค่า
+            const pushValue = document.getElementById('pushvalue');
+            const pushLable = document.getElementById('pushlable');
+            myChart.data.datasets[0].data.push(pushValue.value);
+            myChart.data.labels.push(pushlable.value);          
+            //console.log(myChart.data.datasets[0].data);
+            //console.log(myChart.data.datasets[0].data.push(pushValue.value));
+            myChart.update();
+        }
+
+    </script>
+    <script>
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
 
 </body>
 
