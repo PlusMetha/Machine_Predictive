@@ -11,37 +11,32 @@
 
     <hr>
     <input id="pushvalue" value="10" type="number">
-    <input id="pushlable"  type="number">
+    <input id="pushlable" type="number">
     <button id="push"> Push Value</button>
 
 
     <script>
-        //https://blynk.cloud/external/api/get?token=rcTY2MUJRcmfnG0s36Q6fnl2qTE6ZHUD&v5
-        fetch("https://blynk.cloud/external/api/get?token=rcTY2MUJRcmfnG0s36Q6fnl2qTE6ZHUD&v5")
+        //https://blynk.cloud/external/api/get?token=rcTY2MUJRcmfnG0s36Q6fnl2qTE6ZHUD&v10
+        fetch("https://blynk.cloud/external/api/get?token=rcTY2MUJRcmfnG0s36Q6fnl2qTE6ZHUD&v10")
             .then(function (response) {
                 return response.json() // แปลงข้อมูลที่ได้เป็น json
             })
             .then(function (data) {
                 console.log(data); // แสดงข้อมูล JSON จาก then ข้างบน
+                const AccX = JSON.parse(data);
+                console.log(AccX);
             })
-        
-    
+
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         const labels = [
-            '1',
-            '2',
-            '3',
-            '4',
-            '5',
-            '6',
-            '7',
-            '8',
-            '9',
- 
+
+            '0',
+
         ];
 
         const data = {
@@ -50,7 +45,7 @@
                 label: 'My First dataset',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: [1, 2, 3, 4, 5, 6, 7, 8, 9,],
+                data: [0,],
                 spanGaps: true, //ทำให้ค่าที่หายไปแสดง
                 showLine: true, //ทำให้ค่าที่หายไปแสดง
             }]
@@ -59,22 +54,41 @@
         const config = {
             type: 'line',
             data: data,
-            options: {}
+            options: {
+    animation: {
+        duration: 0, // general animation time
+    },
+    hover: {
+        animationDuration: 0, // duration of animations when hovering an item
+    },
+    responsiveAnimationDuration: 0, // animation duration after a resize
+}
         };
 
 
-        const push  = document.getElementById('push');
-        push.addEventListener("click", pushValueChart)
+        const push = document.getElementById('push');
+ 
+        push.addEventListener("keydown", pushValueChart)
+         delay(1000);
         // console.log(pushValue.value);
-        
-        function pushValueChart(){
+ 
+        function pushValueChart() {
             //console.log(myChart.data.datasets[0].data); ตัวอย่างแสดงค่า
             //myChart.data.datasets[0].data.push(5); ตัวอย่างเพิ่มค่า
+ 
+            function doSomethingWithText(text) {
+                myChart.data.datasets[0].data.push(text);
+            }
+            fetch('https://blynk.cloud/external/api/get?token=rcTY2MUJRcmfnG0s36Q6fnl2qTE6ZHUD&v10')
+                .then(data => data.text())
+                .then(doSomethingWithText)
+                .catch(error => new Error(error));
+
             const pushValue = document.getElementById('pushvalue');
             const pushLable = document.getElementById('pushlable');
-            myChart.data.datasets[0].data.push(pushValue.value);
-            myChart.data.labels.push(pushlable.value);          
-            //console.log(myChart.data.datasets[0].data);
+            const time =  Date.now();
+            myChart.data.labels.push(time/1000);
+            console.log(myChart.data.datasets[0].data);
             //console.log(myChart.data.datasets[0].data.push(pushValue.value));
             myChart.update();
         }
